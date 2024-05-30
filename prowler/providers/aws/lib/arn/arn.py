@@ -46,6 +46,7 @@ def parse_iam_credentials_arn(arn: str) -> ARN:
             arn_parsed.resource_type != "role"
             and arn_parsed.resource_type != "user"
             and arn_parsed.resource_type != "assumed-role"
+            and arn_parsed.resource_type != "root"
         ):
             raise RoleArnParsingInvalidResourceType
         elif arn_parsed.resource == "":
