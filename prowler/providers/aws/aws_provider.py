@@ -959,11 +959,15 @@ def create_sts_session(
         sts_client = create_sts_session(session, 'us-west-2')
     """
     try:
-        sts_endpoint_url = (
-            f"https://sts.{aws_region}.amazonaws.com"
-            if "cn-" not in aws_region
-            else f"https://sts.{aws_region}.amazonaws.com.cn"
-        )
+        endpoint = session._session._profile_map.get(session._session.profile, {}).get("endpoint_url")
+        if endpoint:
+            sts_endpoint_url = endpoint
+        else:
+            sts_endpoint_url = (
+                f"https://sts.{aws_region}.amazonaws.com"
+                if "cn-" not in aws_region
+                else f"https://sts.{aws_region}.amazonaws.com.cn"
+            )
         return session.client("sts", aws_region, endpoint_url=sts_endpoint_url)
     except Exception as error:
         logger.critical(
